@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #faf8f5 0%, #f7f2eb 48%, #fcfcfd 100%);
+  color: #2f3340;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.invoice-print-shell {
+  border: 2px solid #000;
+  border-radius: 0;
+}
+
+.invoice-print-shell .section-box {
+  border: 1px solid #000;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.invoice-print-shell .section-box + .section-box {
+  border-top: 0;
+  margin-top: 0;
+}
+
+.invoice-print-shell .border-gray-400,
+.invoice-print-shell .border-gray-300,
+.invoice-print-shell .border-gray-500,
+.invoice-print-shell .border-gray-200,
+.invoice-print-shell .border-gray-100 {
+  border-color: #000 !important;
+}
+
+.invoice-print-shell .border-b,
+.invoice-print-shell .border-t,
+.invoice-print-shell .border-l,
+.invoice-print-shell .border-r {
+  border-color: #000 !important;
+}
+
+.invoice-print-shell .rounded,
+.invoice-print-shell .rounded-xl,
+.invoice-print-shell .rounded-lg,
+.invoice-print-shell .rounded-md,
+.invoice-print-shell .rounded-sm,
+.invoice-print-shell .rounded-full {
+  border-radius: 0 !important;
+}
+
+.invoice-print-shell .border {
+  border-color: #000 !important;
+}
+
+::selection {
+  background: rgba(183, 156, 237, 0.24);
+  color: #2f3340;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body > *:not(.print-invoice-root) {
+    display: none !important;
+  }
+
+  .print-invoice-root {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+  }
+
+  .print-invoice-root > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .invoice-print-shell {
+    width: 100%;
+    min-height: 277mm;
+    margin: 0;
+    border: 2px solid #000 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    padding: 5mm !important;
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+    page-break-after: avoid;
+    page-break-before: avoid;
+  }
+
+  .invoice-print-shell .section-box {
+    border: 1px solid #000;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .invoice-print-shell .section-box:last-child {
+    margin-bottom: 0;
+  }
+
+  .invoice-print-shell .border-gray-400,
+  .invoice-print-shell .border-gray-300,
+  .invoice-print-shell .border-gray-500 {
+    border-color: #000 !important;
+  }
+
+  .invoice-print-shell .border-b,
+  .invoice-print-shell .border-t,
+  .invoice-print-shell .border-l,
+  .invoice-print-shell .border-r {
+    border-color: #000 !important;
+  }
+
+  .invoice-print-shell .rounded,
+  .invoice-print-shell .rounded-xl,
+  .invoice-print-shell .rounded-lg,
+  .invoice-print-shell .rounded-md,
+  .invoice-print-shell .rounded-sm,
+  .invoice-print-shell .rounded-full {
+    border-radius: 0 !important;
+  }
+
+  .invoice-print-shell .border {
+    border-color: #000 !important;
+  }
+
+  .print-invoice-root .print\:hidden,
+  .print-invoice-root .print-hidden,
+  .print-invoice-root [class*='bg-gray-50'] {
+    display: none !important;
+  }
+
+  .print-invoice-root .invoice-print-shell * {
+    box-shadow: none !important;
+  }
+
+  .print-invoice-root .invoice-print-shell table,
+  .print-invoice-root .invoice-print-shell tr,
+  .print-invoice-root .invoice-print-shell td,
+  .print-invoice-root .invoice-print-shell th,
+  .print-invoice-root .invoice-print-shell .border,
+  .print-invoice-root .invoice-print-shell [class*='border-'] {
+    page-break-inside: avoid;
+    break-inside: avoid-page;
+  }
+
+  .invoice-print-shell .text-4xl {
+    font-size: 28px !important;
+  }
+
+  .invoice-print-shell .text-sm {
+    font-size: 11px !important;
+  }
+
+  .invoice-print-shell .text-xs {
+    font-size: 9px !important;
+  }
+
+  .invoice-print-shell .p-6 {
+    padding: 0.35rem !important;
+  }
+
+  .invoice-print-shell .p-5 {
+    padding: 0.35rem !important;
+  }
+
+  .invoice-print-shell .mb-6,
+  .invoice-print-shell .mb-4,
+  .invoice-print-shell .mb-3 {
+    margin-bottom: 0.25rem !important;
+  }
+
+  .invoice-print-shell .invoice-header-info {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.5rem !important;
+  }
+
+  .invoice-print-shell .invoice-header-cell {
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .invoice-print-shell .invoice-header-cell span {
+    white-space: nowrap !important;
+  }
+}

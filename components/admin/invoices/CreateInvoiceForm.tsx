@@ -343,6 +343,8 @@ export default function CreateInvoiceForm({
       grandTotal?: number;
       amountInWords?: string;
       rows?: InvoiceRow[];
+      paymentMade?: number | string;
+      pendingAmount?: number | string;
     };
 
     const hasInvoiceContent = Boolean(
@@ -370,10 +372,12 @@ export default function CreateInvoiceForm({
       zIndex: element.style.zIndex,
       boxSizing: element.style.boxSizing,
       margin: element.style.margin,
+      padding: element.style.padding,
     };
 
     try {
-      element.style.width = '794px';
+      element.style.width = '810px';
+      element.style.padding = '8px';
       element.style.maxWidth = '794px';
       element.style.overflow = 'visible';
       element.style.position = 'fixed';
@@ -435,6 +439,7 @@ export default function CreateInvoiceForm({
       element.style.zIndex = originalStyles.zIndex;
       element.style.boxSizing = originalStyles.boxSizing;
       element.style.margin = originalStyles.margin;
+      element.style.padding = originalStyles.padding;
       setIsGeneratingPdf(false);
     }
   };
@@ -444,6 +449,8 @@ export default function CreateInvoiceForm({
       grandTotal?: number;
       amountInWords?: string;
       rows?: InvoiceRow[];
+      paymentMade?: number | string;
+      pendingAmount?: number | string;
     };
 
     const hasInvoiceContent = Boolean(
@@ -475,6 +482,8 @@ export default function CreateInvoiceForm({
         grandTotal: invoiceSource.grandTotal || calculateTotal(invoiceSource.rows || []),
         amountInWords: invoiceSource.amountInWords,
         rows: invoiceSource.rows || [],
+        paymentMade: invoiceSource.paymentMade,
+        pendingAmount: invoiceSource.pendingAmount,
       });
       try {
         await fetch('/api/admin/activity', {
@@ -495,6 +504,7 @@ export default function CreateInvoiceForm({
       toast.error('Unable to export the invoice as Excel right now.');
     }
   };
+  
 
   const isInvoiceLoading = mode === 'view' && (isLoadingInitialData || (initialData === undefined && !initialLoadError));
   const hasLoadError = mode === 'view' && Boolean(initialLoadError);
@@ -537,7 +547,7 @@ export default function CreateInvoiceForm({
           <span>Back to Invoices</span>
         </button>
 
-        <div ref={invoiceShellRef} className="pointer-events-none absolute -left-[9999px] top-0 opacity-0">
+        <div ref={invoiceShellRef} className="fixed left-0 top-0 -z-50">
           <InvoiceTemplate data={invoiceTemplateData} parentMode={mode} hideEmptyPaymentSection />
         </div>
 

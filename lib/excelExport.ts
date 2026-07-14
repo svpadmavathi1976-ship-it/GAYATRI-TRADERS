@@ -83,14 +83,28 @@ function applyTitleStyle(cell: XLSX.CellObject) {
     alignment: { horizontal: 'center', vertical: 'center' },
   };
 }
-
 function applySectionStyle(cell: XLSX.CellObject) {
   cell.s = {
-    font: { bold: true, color: { rgb: '2F3340' } },
-    fill: { fgColor: { rgb: 'F5EEFF' } },
+    font: {
+      bold: true,
+      sz: 11,
+      color: { rgb: '2F3340' },
+    },
+    fill: {
+      fgColor: { rgb: 'EFE6FF' },
+    },
+    alignment: {
+      vertical: 'center',
+      horizontal: 'left',
+    },
+    border: {
+      top: { style: 'thin', color: { rgb: 'D8CFF4' } },
+      bottom: { style: 'thin', color: { rgb: 'D8CFF4' } },
+      left: { style: 'thin', color: { rgb: 'D8CFF4' } },
+      right: { style: 'thin', color: { rgb: 'D8CFF4' } },
+    },
   };
 }
-
 function autoFitColumns(sheet: XLSX.WorkSheet) {
   const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as Array<Array<string | number>>;
   const columnCount = Math.max(1, ...(rows.map((row) => row.length)));
@@ -176,9 +190,22 @@ console.log("Invoice:", invoice);
 
   const worksheet = XLSX.utils.aoa_to_sheet(rows);
   const titleCell = worksheet['A1'];
-  if (titleCell) {
-    applyTitleStyle(titleCell as XLSX.CellObject);
-  }
+if (titleCell) {
+  (titleCell as XLSX.CellObject).s = {
+    font: {
+      bold: true,
+      sz: 20,
+      color: { rgb: 'FFFFFF' },
+    },
+    fill: {
+      fgColor: { rgb: '7F63C7' },
+    },
+    alignment: {
+      horizontal: 'center',
+      vertical: 'center',
+    },
+  };
+}
 
   worksheet['A2'] = createCell('Invoice Export', {
     font: { italic: true, color: { rgb: '6D7280' } },
@@ -237,7 +264,11 @@ console.log("Invoice:", invoice);
     }
   });
 
-  worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
+  worksheet['!merges'] = [
+  { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }, // Company Name
+  { s: { r: 1, c: 0 }, e: { r: 1, c: 3 } }, // Subtitle
+  { s: { r: 2, c: 0 }, e: { r: 2, c: 3 } }, // Invoice Export
+];
   autoFitColumns(worksheet);
 
   const workbook = XLSX.utils.book_new();

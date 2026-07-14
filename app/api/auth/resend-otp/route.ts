@@ -57,12 +57,19 @@ export async function POST(request: Request) {
     });
 
     if (resend) {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-        to: email,
-        subject: 'Your new Gayatri Traders verification code',
-        html: `<p>Your new verification code is <strong>${otp}</strong>.</p><p>This code will expire in 15 minutes.</p>`,
-      });
+      try {
+  const emailResponse = await resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL!,
+    to: email,
+    subject: "Your Gayatri Traders verification code",
+    html: `<p>Your verification code is <strong>${otp}</strong>.</p>`,
+  });
+
+  console.log("Resend response:", emailResponse);
+} catch (error) {
+  console.error("Resend error:", error);
+  throw error;
+}
     }
 
     return NextResponse.json(

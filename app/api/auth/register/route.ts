@@ -96,14 +96,15 @@ export async function POST(request: Request) {
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     const admin = await prisma.admin.create({
-      data: {
-        fullName: values.fullName,
-        username: values.username,
-        email: values.email,
-        password: hashedPassword,
-        isVerified: false,
-      },
-    });
+  data: {
+    fullName: values.fullName,
+    username: values.username,
+    email: values.email,
+    password: hashedPassword,
+    role: 'SUPER_ADMIN',
+    isVerified: false,
+  },
+});
 
     await prisma.oTP.create({
       data: {
@@ -114,12 +115,19 @@ export async function POST(request: Request) {
     });
 
     if (resend) {
-      await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-        to: values.email,
-        subject: 'Your Gayatri Traders verification code',
-        html: `<p>Your verification code is <strong>${otp}</strong>.</p><p>This code will expire in 15 minutes.</p>`,
-      });
+      try {
+  const emailResponse = await resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL!,
+    to: values.email,
+    subject: "Your Gayatri Traders verification code",
+    html: `<p>Your verification code is <strong>${otp}</strong>.</p>`,
+  });
+
+  console.log("Resend response:", emailResponse);
+} catch (error) {
+  console.error("Resend error:", error);
+  throw error;
+}
     }
 
     return NextResponse.json(
@@ -131,7 +139,9 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Registration failed:', error);
+  console.error('==========================');
+  console.error(error);
+  console.error('==========================');
     return NextResponse.json(
       {
         success: false,

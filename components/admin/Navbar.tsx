@@ -1,9 +1,9 @@
 'use client';
-
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Upload } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-
 interface NavbarProps {
   userName: string;
   profilePicture?: string | null;
@@ -13,6 +13,13 @@ export default function Navbar({ userName, profilePicture }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(profilePicture ?? null);
   const [isUploading, setIsUploading] = useState(false);
+  const router = useRouter();
+  async function handleLogout() {
+  await signOut({
+    callbackUrl: '/login',
+  });
+
+}
 
   useEffect(() => {
     setCurrentImage(profilePicture ?? null);
@@ -99,7 +106,7 @@ export default function Navbar({ userName, profilePicture }: NavbarProps) {
               <button type="button" className="w-full rounded-xl px-3 py-2 text-left text-sm text-[#4B5563] transition hover:bg-[#F8F4FF]">
                 Profile
               </button>
-              <button type="button" className="w-full rounded-xl px-3 py-2 text-left text-sm text-[#4B5563] transition hover:bg-[#F8F4FF]">
+             <button type="button" onClick={handleLogout} className="w-full rounded-xl px-3 py-2 text-left text-sm text-[#4B5563] transition hover:bg-[#F8F4FF]">
                 Logout
               </button>
             </div>

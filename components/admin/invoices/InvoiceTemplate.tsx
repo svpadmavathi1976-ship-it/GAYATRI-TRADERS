@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { X } from 'lucide-react';
 import { calculateTotal, numberToWords, type InvoiceFormData, type InvoiceRow } from '@/lib/invoiceUtils';
 import InvoiceWatermark from '@/components/admin/invoices/InvoiceWatermark';
@@ -27,7 +27,7 @@ const HEADER_SECTION_CLASS = 'mb-0 bg-white';
 const INPUT_CLASS = 'w-full rounded border border-gray-300 px-1 py-1 text-[12px] font-semibold text-gray-800 outline-none focus:border-blue-500';
 const EDITABLE_TEXT_CLASS = 'w-full border-0 border-b border-gray-400 bg-transparent px-0 py-0 text-[12px] font-semibold text-gray-800 outline-none focus:border-blue-500';
 
-export default function InvoiceTemplate({
+const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
   data,
   className,
   isEditable = false,
@@ -40,7 +40,7 @@ export default function InvoiceTemplate({
   showPaymentTracking = false,
   hideEmptyPaymentSection = false,
   parentMode,
-}: InvoiceTemplateProps) {
+}: InvoiceTemplateProps, ref) => {
   const safeRows = data.rows || [];
   const totalAmount = typeof data.grandTotal === 'number' ? data.grandTotal : calculateTotal(safeRows);
   const amountInWords = data.amountInWords || numberToWords(totalAmount);
@@ -56,16 +56,15 @@ export default function InvoiceTemplate({
       : totalAmount - paymentMadeValue;
   let shouldShowPaymentDetails = false;
 
-  if (parentMode === 'create') {
-    // Create page: keep the existing create-form behavior, but hide the section for PDF capture when there is no payment amount.
-    shouldShowPaymentDetails = hideEmptyPaymentSection ? hasPaymentMadeValue : Boolean(showPaymentTracking);
-  } else if (parentMode === 'edit') {
-    // Edit page: show payment tracking only when a saved paymentMade value > 0 exists
+ if (parentMode === 'create') {
+    shouldShowPaymentDetails = hideEmptyPaymentSection
+        ? hasPaymentMadeValue
+        : Boolean(showPaymentTracking);
+} else if (parentMode === 'edit') {
+    shouldShowPaymentDetails = true;
+} else {
     shouldShowPaymentDetails = hasPaymentMadeValue;
-  } else {
-    // View or unspecified: show when invoice has payment made value
-    shouldShowPaymentDetails = hasPaymentMadeValue;
-  }
+}
 
   const renderValue = (value: string | number | undefined, fallback = '—') => {
     if (value === undefined || value === null || value === '') {
@@ -95,7 +94,7 @@ export default function InvoiceTemplate({
   };
 
   return (
-    <div className={['invoice-print-shell relative overflow-hidden border-[2px] border-black bg-white p-[3mm]', className].filter(Boolean).join(' ')}>
+    <div ref={ref} className={['invoice-print-shell relative overflow-hidden border-[2px] border-black bg-white p-[3mm] text-[15px]', className].filter(Boolean).join(' ')}>
       <InvoiceWatermark />
       <div className="relative z-10">
         <div className={HEADER_SECTION_CLASS}>
@@ -144,9 +143,9 @@ export default function InvoiceTemplate({
             </div>
           </div>
 
-          <div className="mt-2 border-t border-black pt-2 text-[10px] text-gray-800">
-            <div className="invoice-header-info grid grid-cols-4 gap-3 text-[12px] font-semibold">
-              <div className="invoice-header-cell flex items-center justify-center gap-1.5 whitespace-nowrap text-center">
+          <div className="mt-2 border-t border-black pt-3 pb-1 text-[10px] text-gray-800">
+            <div className="invoice-header-info grid grid-cols-4 gap-3 py-1 text-[12px] font-semibold leading-6">
+              <div className="invoice-header-cell flex min-h-[28px] items-center justify-center gap-1.5 whitespace-nowrap text-center">
                 <span className="font-semibold text-gray-700">Bill No.</span>
                 <span className="font-semibold text-gray-700">:</span>
                 {isEditable ? (
@@ -163,7 +162,7 @@ export default function InvoiceTemplate({
                   <span className="ml-1 min-w-0 font-bold text-gray-800">{renderValue(data.billNumber)}</span>
                 )}
               </div>
-              <div className="invoice-header-cell flex items-center justify-center gap-1.5 whitespace-nowrap text-center">
+              <div className="invoice-header-cell flex min-h-[28px] items-center justify-center gap-1.5 whitespace-nowrap text-center">
                 <span className="font-semibold text-gray-700">State</span>
                 <span className="font-semibold text-gray-700">:</span>
                 {isEditable ? (
@@ -180,7 +179,7 @@ export default function InvoiceTemplate({
                   <span className="ml-1 min-w-0 font-bold text-gray-800">{renderValue(data.state)}</span>
                 )}
               </div>
-              <div className="invoice-header-cell flex items-center justify-center gap-1.5 whitespace-nowrap text-center">
+              <div className="invoice-header-cell flex min-h-[28px] items-center justify-center gap-1.5 whitespace-nowrap text-center">
                 <span className="font-semibold text-gray-700">State Code</span>
                 <span className="font-semibold text-gray-700">:</span>
                 {isEditable ? (
@@ -197,7 +196,7 @@ export default function InvoiceTemplate({
                   <span className="ml-1 min-w-0 font-bold text-gray-800">{renderValue(data.stateCode)}</span>
                 )}
               </div>
-              <div className="invoice-header-cell flex items-center justify-center gap-1.5 whitespace-nowrap text-center">
+              <div className="invoice-header-cell flex min-h-[28px] items-center justify-center gap-1.5 whitespace-nowrap text-center">
                 <span className="font-semibold text-gray-700">Date</span>
                 <span className="font-semibold text-gray-700">:</span>
                 {isEditable ? (
@@ -621,4 +620,6 @@ export default function InvoiceTemplate({
       </div>
     </div>
   );
-}
+});
+
+export default InvoiceTemplate;

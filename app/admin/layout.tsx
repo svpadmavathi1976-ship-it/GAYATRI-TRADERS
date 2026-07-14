@@ -10,10 +10,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/login');
   }
 
-  const displayName = (session.user as { fullName?: string; username?: string; name?: string; email?: string } | undefined)?.fullName
-    ?? (session.user as { fullName?: string; username?: string; name?: string; email?: string } | undefined)?.username
-    ?? (session.user as { fullName?: string; username?: string; name?: string; email?: string } | undefined)?.name
-    ?? 'Admin';
+  const user = session.user as { fullName?: string; username?: string; name?: string; email?: string; profilePicture?: string | null } | undefined;
+  const displayName = user?.fullName ?? user?.username ?? user?.name ?? 'Admin';
+  const profilePicture = user?.profilePicture ?? null;
 
-  return <AdminLayoutClient displayName={displayName}>{children}</AdminLayoutClient>;
+  return <AdminLayoutClient displayName={displayName} profilePicture={profilePicture}>{children}</AdminLayoutClient>;
 }

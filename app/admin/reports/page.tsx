@@ -194,7 +194,6 @@ export default async function ReportsPage() {
     <div className="space-y-6">
       <section className="rounded-[28px] border border-[#E8DFFB] bg-white/80 p-6 shadow-[0_25px_60px_-24px_rgba(95,100,112,0.24)] backdrop-blur">
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8B6AD3]">ADMIN PANEL</p>
           <h2 className="text-3xl font-semibold text-[#2F3340]">Customer Reports</h2>
         </div>
       </section>

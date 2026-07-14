@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, ChevronLeft, ChevronRight, FileText, LayoutGrid, LogOut, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { BarChart3, ChevronLeft, ChevronRight, FileText, LayoutGrid, LogOut, Settings, ShieldCheck } from 'lucide-react';
 
 const menuItems = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutGrid },
@@ -34,7 +34,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           {!collapsed && (
             <div className="min-w-0">
               <p className="text-sm font-semibold text-[#2F3340]">Gayatri Traders</p>
-              <p className="text-xs text-[#7D8290]">ERP Workspace</p>
             </div>
           )}
         </Link>
@@ -69,15 +68,6 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         })}
       </nav>
 
-      <div className="mt-auto rounded-[24px] border border-[#E8DFFB] bg-gradient-to-br from-[#FAF8F5] to-[#F4EEFF] p-4">
-        <div className="mb-3 flex items-center gap-2 text-[#7F63C7]">
-          <Sparkles size={16} />
-          {!collapsed && <span className="text-sm font-semibold">Smart Insights</span>}
-        </div>
-        {!collapsed && (
-          <p className="text-sm leading-6 text-[#6D7280]">Track invoices, payments, and cash flow in one premium view.</p>
-        )}
-      </div>
     </aside>
   );
 }

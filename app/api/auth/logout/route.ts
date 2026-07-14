@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
+import { createActivityLog } from '@/lib/activity';
 
 export async function POST() {
   const expired = new Date(0).toUTCString();
+
+  await createActivityLog({
+    category: 'auth',
+    title: 'Admin Logout',
+    description: 'The admin logged out successfully.',
+  });
 
   const res = NextResponse.redirect(new URL('/login', 'http://localhost'));
 

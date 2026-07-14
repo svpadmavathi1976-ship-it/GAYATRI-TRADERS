@@ -31,13 +31,38 @@ interface CustomerReportActionsProps {
 }
 
 export function CustomerReportActions({ customer, invoices }: CustomerReportActionsProps) {
-  const handleExportPdf = () => {
-    console.log("Invoices sent to PDF:", invoices);
+  const handleExportPdf = async () => {
     exportCustomerReportToPDF({ customer, invoices });
+    try {
+      await fetch('/api/admin/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category: 'report',
+          title: 'Customer Report PDF Generated',
+          description: `Customer report for ${customer.customerName} was generated as PDF.`,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to log customer report PDF activity:', error);
+    }
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     exportCustomerReportToExcel({ customer, invoices });
+    try {
+      await fetch('/api/admin/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category: 'report',
+          title: 'Customer Report Excel Generated',
+          description: `Customer report for ${customer.customerName} was generated as Excel.`,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to log customer report Excel activity:', error);
+    }
   };
 
   return (

@@ -421,7 +421,7 @@ export async function exportAllCustomerReportsToPDF(customerReports: CustomerRep
       });
     };
 
-    const drawTableRow = (rowValues: string[], rowIndex: number) => {
+    const drawTableRow = (rowValues: string[], _rowIndex: number) => {
       const rowHeight = Math.max(
         8.2,
         ...rowValues.map((value, colIndex) => {
@@ -442,18 +442,12 @@ export async function exportAllCustomerReportsToPDF(customerReports: CustomerRep
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(6.9);
       pdf.setTextColor(31, 41, 55);
+
       rowValues.forEach((value, colIndex) => {
         const width = columnWidths[colIndex];
-        const displayValue =
-  index >= 5
-    ? String(value).replace(/\s+/g, ' ')
-    : String(value);
+        const displayValue = colIndex >= 5 ? String(value).replace(/\s+/g, ' ') : String(value);
+        const wrappedText = getWrappedTextLines(pdf, displayValue, width - cellPadding * 2);
 
-const wrappedText = getWrappedTextLines(
-  pdf,
-displayValue,
-  width - cellPadding * 2
-);
         pdf.setFillColor(255, 255, 255);
         pdf.setDrawColor(192, 200, 209);
         pdf.setLineWidth(0.14);
@@ -466,26 +460,16 @@ displayValue,
               ? currentX + width / 2
               : currentX + cellPadding;
         const textY = yPosition + 2.2 + Math.max(0, wrappedText.length - 1) * 1.5;
+
         if (colIndex >= 5) {
-          
-
-          pdf.text(
-            wrappedText,
-            currentX + width - cellPadding,
-            textY,
-            { align: 'right' }
-          );
+          pdf.text(wrappedText, currentX + width - cellPadding, textY, { align: 'right' });
         } else {
-            pdf.text(
-              wrappedText,
-              textX,
-              textY,
-              { align: textAlignments[colIndex] as 'left' | 'center' | 'right' }
-            );
+          pdf.text(wrappedText, textX, textY, { align: textAlignments[colIndex] as 'left' | 'center' | 'right' });
         }
-      currentX += width;   // <-- ADD THIS
 
-});   
+        currentX += width;
+      });
+
       yPosition += rowHeight;
     };
 

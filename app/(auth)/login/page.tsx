@@ -34,6 +34,19 @@ export default function LoginPage() {
         return;
       }
 
+      try {
+        await fetch('/api/admin/activity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: 'auth',
+            title: 'Admin Login',
+            description: 'The admin signed in successfully.',
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to log login activity:', error);
+      }
       toast.success('Signed in successfully');
       const redirectTo = result.url ?? '/admin/dashboard';
       router.replace(redirectTo);

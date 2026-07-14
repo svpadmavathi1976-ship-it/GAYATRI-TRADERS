@@ -1,5 +1,7 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { createActivityLog } from '@/lib/activity';
 
 function validateInvoicePayload(payload: Record<string, any>) {
   const errors: Record<string, string> = {};
@@ -175,6 +177,14 @@ export async function POST(request: Request) {
         pendingAmount: pendingAmount,
       },
     });
+
+    await createActivityLog({
+      category: 'invoice',
+      title: 'Invoice Created',
+      description: `Invoice ${invoice.billNumber} was created for ${invoice.receiverName}.`,
+    });
+
+    revalidatePath('/admin/dashboard');
 
     return NextResponse.json(
       {

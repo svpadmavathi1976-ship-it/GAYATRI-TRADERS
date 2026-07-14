@@ -87,20 +87,46 @@ export function CustomerReportsTable({ customerReports, customerExportData }: Cu
   const hasActiveFilters = normalizedSearch.length > 0 || selectedFilter !== 'all';
   const showNoMatches = customerReports.length > 0 && filteredCustomers.length === 0 && hasActiveFilters;
 
-  const handleExportAllPdf = () => {
+  const handleExportAllPdf = async () => {
     if (!customerExportData?.length) {
       return;
     }
 
     exportAllCustomerReportsToPDF(customerExportData);
+    try {
+      await fetch('/api/admin/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category: 'report',
+          title: 'All Customers PDF Generated',
+          description: 'All customer reports were generated as PDF.',
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to log all customer report PDF activity:', error);
+    }
   };
 
-  const handleExportAllExcel = () => {
+  const handleExportAllExcel = async () => {
     if (!customerExportData?.length) {
       return;
     }
 
     exportAllCustomerReportsToExcel(customerExportData);
+    try {
+      await fetch('/api/admin/activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category: 'report',
+          title: 'All Customers Excel Generated',
+          description: 'All customer reports were generated as Excel.',
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to log all customer report Excel activity:', error);
+    }
   };
 
   return (

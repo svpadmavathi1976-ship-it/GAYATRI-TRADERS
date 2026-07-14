@@ -45,6 +45,7 @@ export const authOptions: NextAuthOptions = {
           email: admin.email,
           username: admin.username,
           fullName: admin.fullName,
+          profilePicture: admin.profilePicture,
           remember: Boolean(credentials.remember),
         } as any;
       },
@@ -62,11 +63,28 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (token && (token as any).user) {
-        session.user = (token as any).user as any;
-      }
-      return session;
-    },
+    if (token?.sub) {
+    const admin = await prisma.admin.findUnique({
+      where: { id: token.sub },
+      select: {
+        id: true,
+        fullName: true,
+        username: true,
+        email: true,
+        profilePicture: true,
+      },
+    });
+
+    if (admin) {
+      session.user = {
+        ...session.user,
+        ...admin,
+      } as any;
+    }
+  }
+
+  return session;
+},
   },
   pages: {
     signIn: '/login',

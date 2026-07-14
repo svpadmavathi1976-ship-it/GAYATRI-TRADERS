@@ -1,5 +1,7 @@
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { createActivityLog } from '@/lib/activity';
 
 function validateInvoicePayload(payload: Record<string, any>) {
   const errors: Record<string, string> = {};
@@ -187,6 +189,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       },
     });
 
+    revalidatePath('/admin/dashboard');
+
     return NextResponse.json({
       success: true,
       message: 'Invoice updated successfully.',
@@ -210,9 +214,23 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
 export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
   try {
+    const invoice = await prisma.invoice.findUnique({ where: { id: params.id } });
+
+    if (!invoice) {
+      return NextResponse.json({ success: false, message: 'Invoice not found.' }, { status: 404 });
+    }
+
     await prisma.invoice.delete({
       where: { id: params.id },
     });
+
+    await createActivityLog({
+      category: 'invoice',
+      title: 'Invoice Deleted',
+      description: `Invoice ${invoice.billNumber} was deleted.`,
+    });
+
+    revalidatePath('/admin/dashboard');
 
     return NextResponse.json({
       success: true,

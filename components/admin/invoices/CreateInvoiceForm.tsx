@@ -408,6 +408,19 @@ export default function CreateInvoiceForm({
       const billReference = (invoiceSource.billNumber || invoiceSource.billNo || '000').toString();
       const safeBillReference = billReference.replace(/[^a-zA-Z0-9.-]/g, '_');
       pdf.save(`Invoice_${safeBillReference}.pdf`);
+      try {
+        await fetch('/api/admin/activity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: 'invoice',
+            title: 'Invoice PDF Downloaded',
+            description: `Invoice ${invoiceSource.billNumber || invoiceSource.billNo || 'unknown'} PDF was downloaded.`,
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to log invoice PDF activity:', error);
+      }
       toast.success('Invoice PDF downloaded successfully.');
     } catch (error) {
       console.error('Failed to generate invoice PDF:', error);
@@ -463,6 +476,19 @@ export default function CreateInvoiceForm({
         amountInWords: invoiceSource.amountInWords,
         rows: invoiceSource.rows || [],
       });
+      try {
+        await fetch('/api/admin/activity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: 'invoice',
+            title: 'Invoice Excel Downloaded',
+            description: `Invoice ${invoiceSource.billNumber || invoiceSource.billNo || 'unknown'} Excel export was downloaded.`,
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to log invoice Excel activity:', error);
+      }
       toast.success('Invoice exported to Excel successfully.');
     } catch (error) {
       console.error('Failed to export invoice to Excel:', error);

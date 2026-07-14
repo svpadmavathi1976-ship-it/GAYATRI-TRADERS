@@ -40,6 +40,19 @@ export default function SettingsPageClient({ admin }: SettingsPageClientProps) {
   const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const passwordStrength = useMemo(() => {
+  const passedChecks = passwordStrengthChecks.filter((check) =>
+    check.test(passwordForm.newPassword)
+  ).length;
+
+  if (!passwordForm.newPassword) return 'Enter a new password';
+
+  if (passedChecks <= 1) return 'Weak';
+
+  if (passedChecks <= 3) return 'Medium';
+
+  return 'Strong';
+}, [passwordForm.newPassword]);
 
   async function handleProfilePictureUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

@@ -22,20 +22,22 @@ const menuItems = [
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  onNavigate?: () => void;
 }
 
 export default function Sidebar({
   collapsed,
   onToggle,
+  onNavigate,
 }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside
-      className={`fixed left-0 top-0 z-30 hidden h-screen border-r border-[#E9E0F7] bg-white shadow-xl lg:flex lg:flex-col transition-all duration-300 ${
-        collapsed ? 'w-24' : 'w-64'
-      }`}
-    >
+  className={`h-screen border-r border-[#E9E0F7] bg-white shadow-xl transition-all duration-300 ${
+    collapsed ? 'w-24' : 'w-64'
+  } flex flex-col`}
+>
       {/* Header */}
       <div className="border-b border-[#EFE8FB] px-5 py-6">
         <div className="flex items-start justify-between">
@@ -97,10 +99,15 @@ export default function Sidebar({
                 : pathname.startsWith(href);
 
             return (
-              <Link
-                key={name}
-                href={href}
-                className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 ${
+             <Link
+  key={name}
+  href={href}
+  onClick={() => {
+    if (window.innerWidth < 1024) {
+      onNavigate?.();
+    }
+  }}
+  className={`group flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 ${
                   isActive
                     ? 'border-l-4 border-[#8B6AD3] bg-gradient-to-r from-[#EEE6FF] to-[#F8F4FF] text-[#6F4BC3] shadow-md'
                     : 'text-[#505867] hover:bg-[#F8F4FF] hover:text-[#6F4BC3]'

@@ -1,15 +1,20 @@
 'use client';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Upload } from 'lucide-react';
+import { Upload, Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 interface NavbarProps {
   userName: string;
   profilePicture?: string | null;
+  onMenuClick?: () => void;
 }
 
-export default function Navbar({ userName, profilePicture }: NavbarProps) {
+export default function Navbar({
+  userName,
+  profilePicture,
+  onMenuClick,
+}: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(profilePicture ?? null);
   const [isUploading, setIsUploading] = useState(false);
@@ -76,7 +81,14 @@ export default function Navbar({ userName, profilePicture }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-20 border-b border-[#E5E7EB] bg-white px-4 py-2.5 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <button
+  type="button"
+  onClick={onMenuClick}
+  className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#E9E0F7] bg-white shadow-sm transition hover:bg-[#F8F4FF] lg:hidden"
+>
+  <Menu size={22} className="text-[#7F63C7]" />
+</button>
         <div className="relative">
           <button
             type="button"

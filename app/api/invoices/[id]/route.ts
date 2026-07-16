@@ -73,7 +73,6 @@ function mapInvoiceRecord(invoice: any) {
     receiverAddress: invoice.receiverAddress,
     receiverGSTIN: invoice.receiverGSTIN,
     invoiceNumber: invoice.invoiceNumber,
-    billNo: invoice.billNo,
     dispatchedThrough: invoice.dispatchedThrough,
     customTransport: invoice.customTransport,
     billOfLading: invoice.billOfLading,

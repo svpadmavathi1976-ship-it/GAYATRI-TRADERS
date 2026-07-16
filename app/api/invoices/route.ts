@@ -163,7 +163,6 @@ export async function POST(request: Request) {
         receiverAddress: typeof payload.receiverAddress === 'string' ? payload.receiverAddress : '',
         receiverGSTIN: typeof payload.receiverGSTIN === 'string' ? payload.receiverGSTIN : '',
         invoiceNumber: typeof payload.invoiceNumber === 'string' ? payload.invoiceNumber : '',
-        billNo: typeof payload.billNo === 'string' ? payload.billNo : '',
         dispatchedThrough: typeof payload.dispatchedThrough === 'string' ? payload.dispatchedThrough : '',
         customTransport: typeof payload.customTransport === 'string' ? payload.customTransport : '',
         billOfLading: typeof payload.billOfLading === 'string' ? payload.billOfLading : '',

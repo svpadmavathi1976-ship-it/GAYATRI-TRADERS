@@ -86,7 +86,6 @@ export function exportInvoicesToExcel(invoices: InvoiceBackupRecord[]) {
     [],
     [
       'Invoice ID',
-      'Bill Number',
       'Invoice Number',
       'Date',
       'Customer',

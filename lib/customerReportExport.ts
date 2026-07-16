@@ -393,13 +393,45 @@ export async function exportAllCustomerReportsToPDF(customerReports: CustomerRep
       pdf.text('No invoices available for this customer.', margin, yPosition);
       yPosition += 10;
       return;
-    }
+    }const headers = [
+  'Invoice No.',
+  'Invoice Date',
+  'Products',
+  'HSN ACS',
+  'No. of Bags',
+  'Weight',
+  'Rate',
+  'Amount',
+  'Payment Made',
+  'Pending Amount'
+];
 
-    const headers = ['Invoice No.', 'Bill No.', 'Invoice Date', 'Products', 'Qty', 'Amount', 'Payment Made', 'Pending Amount'];
-    const columnWidths = [18, 16, 20, 34, 10, 20, 20, 20, 22];
-    const headerHeight = 8.2;
-    const cellPadding = 1.5;
-    const textAlignments = ['center', 'center', 'center', 'left', 'center', 'right', 'right', 'right', 'right'];
+const columnWidths = [
+  18,
+  20,
+  34,
+  16,
+  16,
+  14,
+  14,
+  18,
+  20,
+  20
+];
+const headerHeight = 8.2;
+const cellPadding = 1.5;
+const textAlignments = [
+  'center',
+  'center',
+  'left',
+  'center',
+  'center',
+  'right',
+  'right',
+  'right',
+  'right',
+  'right'
+];
     let currentX = margin;
 
     const drawTableHeader = () => {
@@ -478,17 +510,32 @@ export async function exportAllCustomerReportsToPDF(customerReports: CustomerRep
 
     customerReport.invoices.forEach((invoice, invoiceIndex) => {
       console.log("Global PDF Invoice:", invoice);
-      const rowValues = [
-        normalizeText(invoice.invoiceNumber),
-        normalizeText(invoice.billNumber),
-        formatDateForExport(invoice.date || invoice.invoiceDate),
-        normalizeText(invoice.products),
-        normalizeText(invoice.quantity),
-        formatCurrencyForPdf(invoice.invoiceAmount),
-        formatPaymentColumnValue(invoice.paymentMade, invoice.paymentMade),
-        formatPaymentColumnValue(invoice.pendingAmount, invoice.paymentMade),
-        
-      ];
+     const rowValues = [
+  normalizeText(invoice.invoiceNumber || invoice.billNo || invoice.billNumber),
+  formatDateForExport(invoice.date || invoice.invoiceDate),
+
+  normalizeText(invoice.products),
+
+  '1006400',
+
+  normalizeText(invoice.bags),
+
+  normalizeText(invoice.quantity),
+
+  normalizeText(invoice.rate),
+
+  formatCurrencyForPdf(invoice.invoiceAmount),
+
+  formatPaymentValueForIndividualPdf(
+    invoice.paymentMade,
+    invoice.paymentMade
+  ),
+
+  formatPaymentValueForIndividualPdf(
+    invoice.pendingAmount,
+    invoice.paymentMade
+  ),
+];
 
       drawTableRow(rowValues, invoiceIndex);
     });
@@ -518,63 +565,77 @@ export function exportAllCustomerReportsToExcel(customerReports: CustomerReportE
   rows.push(['GAYATRI TRADERS']);
   rows.push(['Customer Reports - Consolidated Excel Export']);
   rows.push([]);
-  rows.push([
-    'Customer Name',
-    'GST Number',
-    'Address',
-    'Total Number of Invoices',
-    'Total Purchase Amount',
-    'Last Purchase Date',
-    'Invoice Number',
-    'Bill Number',
-    'Invoice Date',
-    'Product(s)',
-    'Quantity',
-    'Invoice Amount',
-    'Payment Made',
-    'Pending Amount',
-  ]);
+rows.push([
+  'Customer Name',
+  'GST Number',
+  'Address',
+  'Total Number of Invoices',
+  'Total Purchase Amount',
+  'Last Purchase Date',
+  'Invoice Number',
+  'Invoice Date',
+  'Product(s)',
+  'HSN ACS',
+  'No. of Bags',
+  'Weight',
+  'Rate',
+  'Invoice Amount',
+  'Payment Made',
+  'Pending Amount',
+]);
 
   customerReports.forEach((customerReport) => {
     if (customerReport.invoices.length === 0) {
-      rows.push([
-        normalizeText(customerReport.customer.customerName),
-        normalizeText(customerReport.customer.gstNumber),
-        normalizeText(customerReport.customer.address),
-        customerReport.customer.totalInvoices,
-        parseAmountToNumber(customerReport.customer.totalPurchaseAmount),
-        toExcelDate(customerReport.customer.lastPurchaseDate),
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-      ]);
+     rows.push([
+  normalizeText(customerReport.customer.customerName),
+  normalizeText(customerReport.customer.gstNumber),
+  normalizeText(customerReport.customer.address),
+  customerReport.customer.totalInvoices,
+  parseAmountToNumber(customerReport.customer.totalPurchaseAmount),
+  toExcelDate(customerReport.customer.lastPurchaseDate),
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+]);
       return;
     }
 
     customerReport.invoices.forEach((invoice) => {
       
       rows.push([
-        normalizeText(customerReport.customer.customerName),
-        normalizeText(customerReport.customer.gstNumber),
-        normalizeText(customerReport.customer.address),
-        customerReport.customer.totalInvoices,
-        parseAmountToNumber(customerReport.customer.totalPurchaseAmount),
-        toExcelDate(customerReport.customer.lastPurchaseDate),
-        normalizeText(invoice.invoiceNumber),
-        normalizeText(invoice.billNumber),
-        toExcelDate(invoice.date || invoice.invoiceDate),
-        normalizeText(invoice.products),
-        normalizeText(invoice.quantity),normalizeText(invoice.invoiceAmount),
-normalizeText(invoice.paymentMade),
-normalizeText(invoice.pendingAmount),
+  normalizeText(customerReport.customer.customerName),
+  normalizeText(customerReport.customer.gstNumber),
+  normalizeText(customerReport.customer.address),
+  customerReport.customer.totalInvoices,
+  parseAmountToNumber(customerReport.customer.totalPurchaseAmount),
+  toExcelDate(customerReport.customer.lastPurchaseDate),
 
-      ]);
+  normalizeText(invoice.invoiceNumber),
+  toExcelDate(invoice.date || invoice.invoiceDate),
+
+  normalizeText(invoice.products),
+
+  '1006400',
+
+  normalizeText(invoice.bags),
+
+  normalizeText(invoice.quantity),
+
+  normalizeText(invoice.rate),
+
+  normalizeText(invoice.invoiceAmount),
+
+  normalizeText(invoice.paymentMade),
+
+  normalizeText(invoice.pendingAmount),
+]);
     });
   });
 
@@ -587,14 +648,15 @@ normalizeText(invoice.pendingAmount),
   { wch: 22 }, // Total Purchase
   { wch: 18 }, // Last Purchase
   { wch: 15 }, // Invoice Number
-  { wch: 15 }, // Bill Number
   { wch: 18 }, // Invoice Date
   { wch: 38 }, // Products
-  { wch: 12 }, // Quantity
+  { wch: 12 }, // HSN ACS
+  { wch: 12 }, // No. of Bags
+  { wch: 12 }, // Weight
+  { wch: 12 }, // Rate
   { wch: 20 }, // Invoice Amount
   { wch: 20 }, // Payment Made
   { wch: 20 }, // Pending Amount
- 
 ];
   const workbook = XLSX.utils.book_new();
 
@@ -605,8 +667,7 @@ normalizeText(invoice.pendingAmount),
     fill: { fgColor: { rgb: 'FFF3ECFF' }, patternType: 'solid' },
     alignment: { vertical: 'center' },
   };
-
-  for (let columnIndex = 0; columnIndex < 15; columnIndex += 1) {
+for (let columnIndex = 0; columnIndex < 16; columnIndex += 1) {
     const headerCellRef = XLSX.utils.encode_cell({ c: columnIndex, r: headerRowIndex });
     const headerCell = worksheet[headerCellRef];
     if (headerCell) {
@@ -614,8 +675,8 @@ normalizeText(invoice.pendingAmount),
     }
   }
 
-  const currencyColumns = [4, 11, 12, 13, 14];
-  const dateColumns = [5, 8];
+  const currencyColumns = [4, 13, 14, 15];
+  const dateColumns = [5, 7];
 
   for (let rowIndex = headerRowIndex + 1; rowIndex < rows.length; rowIndex += 1) {
     currencyColumns.forEach((columnIndex) => {
@@ -704,10 +765,30 @@ export async function exportCustomerReportToPDF({ customer, invoices }: Customer
   pdf.text('Invoice History', margin, yPosition);
   yPosition += 7;
 
-  const headers = ['Invoice No.', 'Bill No.', 'Invoice Date', 'Products', 'Qty', 'Amount', 'Payment Made', 'Pending Amount'
-
-  ];
-  const columnWidths = [20, 16, 20, 42, 10, 22, 22, 22];
+  const headers = [
+  'Invoice No.',
+  'Invoice Date',
+  'Products',
+  'HSN ACS',
+  'No. of Bags',
+  'Weight',
+  'Rate',
+  'Amount',
+  'Payment Made',
+  'Pending Amount'
+];
+ const columnWidths = [
+  18,
+  20,
+  34,
+  16,
+  16,
+  14,
+  14,
+  18,
+  20,
+  20
+];
   const headerHeight = 8.2;
   const cellPadding = 1.5;
   const textAlignments = ['center', 'center', 'center', 'left', 'center', 'right', 'right', 'right', 'right'];
@@ -737,16 +818,32 @@ export async function exportCustomerReportToPDF({ customer, invoices }: Customer
 
   invoices.forEach((invoice) => {
     const rowValues = [
-      normalizeText(invoice.invoiceNumber),
-      normalizeText(invoice.billNumber),
-      formatDateForExport(invoice.date || invoice.invoiceDate),
-      normalizeText(invoice.products),
-      normalizeText(invoice.quantity),
-      formatCurrencyForPdf(invoice.invoiceAmount),
-      formatPaymentValueForIndividualPdf(invoice.paymentMade, invoice.paymentMade),
-      formatPaymentValueForIndividualPdf(invoice.pendingAmount, invoice.paymentMade),
-    ];
+  normalizeText(invoice.invoiceNumber || invoice.billNo || invoice.billNumber),
 
+  formatDateForExport(invoice.date || invoice.invoiceDate),
+
+  normalizeText(invoice.products),
+
+  '1006400',
+
+  normalizeText(invoice.bags),
+
+  normalizeText(invoice.quantity),
+
+  normalizeText(invoice.rate),
+
+  formatCurrencyForPdf(invoice.invoiceAmount),
+
+  formatPaymentValueForIndividualPdf(
+    invoice.paymentMade,
+    invoice.paymentMade
+  ),
+
+  formatPaymentValueForIndividualPdf(
+    invoice.pendingAmount,
+    invoice.paymentMade
+  ),
+];
     const rowHeight = Math.max(
       8.2,
       ...rowValues.map((value, index) => {
@@ -816,38 +913,59 @@ export function exportCustomerReportToExcel({ customer, invoices }: CustomerRepo
   rows.push(['Last Purchase Date', normalizeText(customer.lastPurchaseDate)]);
   rows.push([]);
   rows.push(['Invoice History']);
-  rows.push(['Invoice Number', 'Bill Number', 'Invoice Date', 'Product(s)', 'Quantity', 'Invoice Amount', 'Payment Made', 'Pending Amount']);
+  rows.push([
+  'Invoice Number',
+  'Invoice Date',
+  'Product(s)',
+  'HSN ACS',
+  'No. of Bags',
+  'Weight',
+  'Rate',
+  'Invoice Amount',
+  'Payment Made',
+  'Pending Amount',
+]);
 
   invoices.forEach((invoice) => {
     rows.push([
-      normalizeText(invoice.invoiceNumber),
-      normalizeText(invoice.billNumber),
-      formatDateForExport(invoice.date || invoice.invoiceDate),
-      normalizeText(invoice.products),
-      normalizeText(invoice.quantity),
-      normalizeText(invoice.invoiceAmount),
-      normalizeText(invoice.paymentMade),
-      normalizeText(invoice.pendingAmount),
-     
-    ]);
+  normalizeText(invoice.invoiceNumber || invoice.billNo || invoice.billNumber),
+
+  formatDateForExport(invoice.date || invoice.invoiceDate),
+
+  normalizeText(invoice.products),
+
+  '1006400',
+
+  normalizeText(invoice.bags),
+
+  normalizeText(invoice.quantity),
+
+  normalizeText(invoice.rate),
+
+  normalizeText(invoice.invoiceAmount),
+
+  normalizeText(invoice.paymentMade),
+
+  normalizeText(invoice.pendingAmount),
+]);
   });
 
   const worksheet = XLSX.utils.aoa_to_sheet(rows);
-  worksheet['!cols'] = [
+ worksheet['!cols'] = [
   { wch: 15 }, // Invoice Number
-  { wch: 15 }, // Bill Number
   { wch: 16 }, // Invoice Date
-  { wch: 35 }, // Products
-  { wch: 12 }, // Quantity
-  { wch: 18 }, // Invoice Amount
+  { wch: 35 }, // Product
+  { wch: 12 }, // HSN
+  { wch: 12 }, // Bags
+  { wch: 12 }, // Weight
+  { wch: 12 }, // Rate
+  { wch: 18 }, // Amount
   { wch: 18 }, // Payment Made
   { wch: 18 }, // Pending Amount
-  
-
 ];
 worksheet['!merges'] = [
-  { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } },
-  { s: { r: 1, c: 0 }, e: { r: 1, c: 8 } },
+  { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },
+  { s: { r: 1, c: 0 }, e: { r: 1, c: 9 } },
 ];
   
   const workbook = XLSX.utils.book_new();

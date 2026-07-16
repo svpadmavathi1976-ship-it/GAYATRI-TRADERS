@@ -152,7 +152,7 @@ export async function POST(request: Request) {
     const grandTotal = Number(payload.grandTotal || 0);
     const paymentMade = payload.paymentMade !== null && payload.paymentMade !== undefined && payload.paymentMade !== '' ? Number(payload.paymentMade) : null;
     const pendingAmount = calculatePendingAmount(grandTotal, paymentMade);
-
+    console.log("Saving rows:", JSON.stringify(payload.rows, null, 2));
     const invoice = await prisma.invoice.create({
       data: {
         billNumber: payload.billNumber.trim(),

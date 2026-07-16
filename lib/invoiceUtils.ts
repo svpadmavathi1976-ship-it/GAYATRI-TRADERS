@@ -146,6 +146,7 @@ export interface InvoiceRow {
   id: string;
   description: string;
   customDescription?: string;
+  bags: number;
   quantity: number;
   rate: number;
   amount: number;

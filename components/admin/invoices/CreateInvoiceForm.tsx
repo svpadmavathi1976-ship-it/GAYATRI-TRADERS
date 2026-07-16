@@ -67,9 +67,10 @@ export const getInvoiceFormDataById = (invoiceId?: string): InvoiceFormData => {
       {
         id: '1',
         description: 'Raw Broken Rice / Damage Rice',
-        quantity: 50,
-        rate: 250,
-        amount: 12500,
+        bags: 0,
+        quantity: 0,
+        rate: 0,
+        amount: 0,
       },
     ],
   });
@@ -187,6 +188,7 @@ export default function CreateInvoiceForm({
               field === 'rate' ? Number(value) : updated.rate
             );
           }
+          console.log("Updated Row:", updated);
           return updated;
         }
         return row;
@@ -208,6 +210,7 @@ export default function CreateInvoiceForm({
         {
           id: newId,
           description: 'Raw Broken Rice / Damage Rice',
+          bags: 0,
           quantity: 0,
           rate: 0,
           amount: 0,

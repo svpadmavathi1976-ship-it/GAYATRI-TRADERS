@@ -116,7 +116,29 @@ function getInvoiceQuantity(items: string | null | undefined) {
 
   return totalQuantity > 0 ? totalQuantity.toLocaleString('en-IN') : '—';
 }
+function getInvoiceBags(items: string | null | undefined) {
+  const rows = parseInvoiceItems(items);
 
+  const totalBags = rows.reduce((sum: number, row: any) => {
+    const bags = Number(row?.bags || 0);
+    return sum + (Number.isFinite(bags) ? bags : 0);
+  }, 0);
+
+  return totalBags > 0 ? totalBags.toLocaleString('en-IN') : '—';
+}
+function getInvoiceRate(items: string | null | undefined) {
+  const rows = parseInvoiceItems(items);
+
+  if (!rows.length) {
+    return '—';
+  }
+
+  const rate = Number(rows[0]?.rate || 0);
+
+  return Number.isFinite(rate) && rate > 0
+    ? rate.toLocaleString('en-IN')
+    : '—';
+}
 function buildCustomerExportData(invoices: Awaited<ReturnType<typeof prisma.invoice.findMany>>, reports: CustomerReportRow[]): CustomerReportExportPayload[] {
   return reports.map((report) => {
     const matchingInvoices = getCustomerInvoicesForReport(invoices, report);
@@ -134,19 +156,38 @@ function buildCustomerExportData(invoices: Awaited<ReturnType<typeof prisma.invo
       console.log("paymentMade:", invoice.paymentMade);
       console.log("pendingAmount:", invoice.pendingAmount);
       return {
-        id: invoice.id || '',
-        invoiceNumber: invoice.invoiceNumber || '—',
-        billNumber: invoice.billNo || invoice.billNumber,
-        invoiceDate: formatDate(invoice.date),
-        products: getInvoiceProductSummary(invoice.items),
-        quantity: getInvoiceQuantity(invoice.items),
-        invoiceAmount: formatCurrency(invoiceAmount),
-        paymentMade: formatPaymentDisplay(paymentMadeValue, paymentMadeValue),
-        pendingAmount: formatPaymentDisplay(pendingAmountValue, paymentMadeValue),
-        runningTotal: formatCurrency(runningTotal),
-        date: invoice.date,
-        grandTotal: invoice.grandTotal,
-      };
+  id: invoice.id || '',
+  invoiceNumber:
+    invoice.invoiceNumber ||
+    invoice.billNo ||
+    invoice.billNumber ||
+    '—',
+
+  invoiceDate: formatDate(invoice.date),
+
+  products: getInvoiceProductSummary(invoice.items),
+
+  bags: getInvoiceBags(invoice.items),
+
+  quantity: getInvoiceQuantity(invoice.items),
+
+  rate: getInvoiceRate(invoice.items),
+
+  invoiceAmount: formatCurrency(invoiceAmount),
+
+  paymentMade: formatPaymentDisplay(paymentMadeValue, paymentMadeValue),
+
+  pendingAmount: formatPaymentDisplay(
+    pendingAmountValue,
+    paymentMadeValue
+  ),
+
+  runningTotal: formatCurrency(runningTotal),
+
+  date: invoice.date,
+
+  grandTotal: invoice.grandTotal,
+};
     });
 
     const totalPurchaseAmount = sortedInvoices.reduce((sum, invoice) => sum + Number(invoice.grandTotal || 0), 0);

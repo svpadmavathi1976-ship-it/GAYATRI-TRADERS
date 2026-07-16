@@ -138,7 +138,7 @@ export function exportInvoiceToExcel(invoice: ExcelInvoiceData) {
   rows.push([`GAYATRI TRADERS`]);
   rows.push(['Invoice Export']);
   rows.push([]);
-  rows.push(['Bill Number', invoice.billNumber || invoice.billNo || '-']);
+  rows.push(['Invoice Number', invoice.billNumber || invoice.billNo || '-']);
   rows.push(['Invoice Date', formatExcelDate(invoice.date)]);
   rows.push(['Customer Name', invoice.receiverName || '-']);
   rows.push(['Address', invoice.receiverAddress || '-']);
@@ -150,12 +150,26 @@ export function exportInvoiceToExcel(invoice: ExcelInvoiceData) {
   rows.push(['Lorry Number', invoice.lorryNumber || '-']);
   rows.push([]);
   rows.push(['Item Details']);
-  rows.push(['Description', 'Quantity', 'Rate', 'Amount']);
+  rows.push([
+  'Description',
+  'HSN ACS',
+  'No. of Bags',
+  'Weight',
+  'Rate',
+  'Amount',
+]);
 
   const itemRows = Array.isArray(invoice.rows) ? invoice.rows : [];
-  itemRows.forEach((row) => {
-    rows.push([row.description || '-', row.quantity || 0, row.rate || 0, row.amount || 0]);
-  });
+ itemRows.forEach((row: any) => {
+  rows.push([
+    row.description || '-',
+    1006400,
+    row.bags || 0,
+    row.quantity || 0,
+    row.rate || 0,
+    row.amount || 0,
+  ]);
+});
 
   rows.push([]);
   rows.push([

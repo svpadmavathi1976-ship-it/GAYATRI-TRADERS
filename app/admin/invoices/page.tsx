@@ -222,7 +222,6 @@ export default function InvoicesPage() {
 
             <div className="space-y-2 rounded-2xl bg-[#F8F4FF] p-4 text-sm text-[#4B5563]">
               <div className="flex items-center justify-between gap-3">
-                <span className="font-medium text-[#6D7280]">Bill Number</span>
                 <span className="font-semibold text-[#2F3340]">{invoiceToDelete.billNo}</span>
               </div>
               <div className="flex items-center justify-between gap-3">

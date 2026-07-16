@@ -34,9 +34,9 @@ export default function Sidebar({
 
   return (
     <aside
-  className={`h-screen border-r border-[#E9E0F7] bg-white shadow-xl transition-all duration-300 ${
+  className={`h-screen border-r border-[#E9E0F7] bg-white shadow-xl transition-all duration-300 flex flex-col ${
     collapsed ? 'w-24' : 'w-64'
-  } flex flex-col`}
+  }`}
 >
       {/* Header */}
       <div className="border-b border-[#EFE8FB] px-5 py-6">

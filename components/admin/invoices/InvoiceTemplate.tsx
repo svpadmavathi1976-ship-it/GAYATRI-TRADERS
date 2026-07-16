@@ -146,7 +146,7 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
           <div className="mt-2 border-t border-black pt-3 pb-1 text-[10px] text-gray-800">
             <div className="invoice-header-info grid grid-cols-4 gap-3 py-1 text-[12px] font-semibold leading-6">
               <div className="invoice-header-cell flex min-h-[28px] items-center justify-center gap-1.5 whitespace-nowrap text-center">
-                <span className="font-semibold text-gray-700">Bill No.</span>
+                <span className="font-semibold text-gray-700">Invoice No. :</span>
                 <span className="font-semibold text-gray-700">:</span>
                 {isEditable ? (
                   <div className="min-w-0">
@@ -271,42 +271,13 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
                 )}
               </div>
 
-              <div className="flex items-center whitespace-nowrap py-1.5">
-                <span className="w-[150px] shrink-0 text-[12px] font-semibold text-gray-700">Invoice No. :</span>
-                {isEditable ? (
-                  <input
-                    type="text"
-                    value={String(data.invoiceNumber ?? '')}
-                    onChange={(event) => onFieldChange?.('invoiceNumber', event.target.value)}
-                    className={`${EDITABLE_TEXT_CLASS} min-w-0 flex-1`}
-                  />
-                ) : (
-                  <span className="min-w-0 flex-1 text-[10px] font-semibold text-gray-800">{renderValue(data.invoiceNumber)}</span>
-                )}
-              </div>
+              
             </div>
 
             <div className="w-px bg-black" />
 
             <div className="space-y-0 p-3">
-              <div className="flex items-center whitespace-nowrap py-1.5">
-                <span className="w-[150px] shrink-0 whitespace-nowrap text-[12px] font-semibold text-gray-700">
-                  Bill No. :
-                </span>
-                {isEditable ? (
-                  <input
-                    type="text"
-                    value={String(data.billNo ?? '')}
-                    onChange={(event) => onFieldChange?.('billNo', event.target.value)}
-                    className={`${EDITABLE_TEXT_CLASS} min-w-0 flex-1`}
-                  />
-                ) : (
-                  <span className="min-w-0 flex-1 whitespace-nowrap text-[10px] font-semibold text-gray-800">
-                    {renderValue(data.billNo)}
-                  </span>
-                )}
-              </div>
-
+             
               <div className="flex items-center whitespace-nowrap py-1.5">
                 <span className="w-[150px] shrink-0 whitespace-nowrap text-[12px] font-semibold text-gray-700">
                   Dispatched Through :
@@ -386,19 +357,20 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
           <div className="overflow-x-auto min-h-[160px] border border-black">
             <table className="w-full border-collapse text-[12px] [&_th:nth-child(3)]:border-l-0 [&_td:nth-child(3)]:border-l-0 [&_input]:!text-[12px] [&_select]:!text-[12px] [&_textarea]:!text-[12px]">
               <thead>
-                <tr>
-                  <th className="border border-black bg-gray-50 p-1 text-center font-semibold">S.No.</th>
-                  <th className="border border-black bg-gray-50 p-1 text-left font-semibold">Description of Goods</th>
-                  <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Quantity</th>
-                  <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Rate</th>
-                  <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Amount</th>
-                  <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Rs.</th>
-                </tr>
-              </thead>
+  <tr>
+    <th className="border border-black bg-gray-50 p-1 text-center font-semibold">S.No.</th>
+    <th className="border border-black bg-gray-50 p-1 text-left font-semibold">Description of Goods</th>
+    <th className="border border-black bg-gray-50 p-1 text-center font-semibold">HSN ACS</th>
+    <th className="border border-black bg-gray-50 p-1 text-center font-semibold">No. of Bags</th>
+    <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Weight</th>
+    <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Rate</th>
+    <th className="border border-black bg-gray-50 p-1 text-center font-semibold">Amount</th>
+  </tr>
+</thead>
               <tbody>
                 {(() => {
                   const firstRow = safeRows[0];
-
+                  console.log("InvoiceTemplate firstRow:", firstRow);
                   if (firstRow) {
                     const quantityError = rowErrors?.[firstRow.id]?.quantity;
                     const rateError = rowErrors?.[firstRow.id]?.rate;
@@ -433,13 +405,39 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
                             )}
                           </td>
                           <td className="border border-black border-b-0 px-1 py-1.5 text-center">
+  <div className="text-[10px] font-semibold text-gray-800">
+    1006400
+  </div>
+</td>
+<td className="border border-black border-b-0 px-1 py-1.5 text-center">
+  {isEditable ? (
+   <input
+  type="number"
+  value={firstRow.bags ?? ''}
+  onChange={(event) =>
+    onRowChange?.(
+      firstRow.id,
+      'bags',
+      parseFloat(event.target.value) || 0
+    )
+  }
+  className={`${EDITABLE_TEXT_CLASS} w-[45px] text-center`}
+  placeholder="0"
+/>
+  ) : (
+    <div className="text-[10px] font-semibold text-gray-800">
+  {firstRow.bags ?? 0}
+</div>
+  )}
+</td>
+                          <td className="border border-black border-b-0 px-1 py-1.5 text-center">
                             {isEditable ? (
                               <div>
                                 <input
                                   type="number"
                                   value={firstRow.quantity || ''}
                                   onChange={(event) => onRowChange?.(firstRow.id, 'quantity', parseFloat(event.target.value) || 0)}
-                                  className={`${EDITABLE_TEXT_CLASS} w-[110px] text-center`}
+                                  className={`${EDITABLE_TEXT_CLASS} w-[65px] mx-auto text-center`}
                                 />
                                 {quantityError ? <p className="mt-1 text-[9px] font-medium text-red-600">{quantityError}</p> : null}
                               </div>
@@ -454,7 +452,7 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
                                   type="number"
                                   value={firstRow.rate || ''}
                                   onChange={(event) => onRowChange?.(firstRow.id, 'rate', parseFloat(event.target.value) || 0)}
-                                  className={`${EDITABLE_TEXT_CLASS} w-[110px] text-center`}
+                                  className={`${EDITABLE_TEXT_CLASS} w-[65px] mx-auto text-center`}
                                 />
                                 {rateError ? <p className="mt-1 text-[9px] font-medium text-red-600">{rateError}</p> : null}
                               </div>
@@ -465,20 +463,29 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
                           <td className="border border-black border-b-0 px-1 py-1.5 text-center font-semibold">
                             <div className="text-[10px] font-semibold text-gray-800">{firstRow.amount.toLocaleString('en-IN')}</div>
                           </td>
-                          <td className="border border-black border-b-0 px-1 py-1.5 text-center">-
-                          </td>
                         </tr>
 
                         <tr>
-                          <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
-                          <td className="border border-black px-1 py-1.5 border-t-0">
-                            <div className="h-[160px] w-full">&nbsp;</div>
-                          </td>
-                          <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
-                          <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
-                          <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
-                          <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
-                        </tr>
+  <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
+  <td className="border border-black px-1 py-1.5 border-t-0">
+    <div className="h-[160px] w-full">&nbsp;</div>
+  </td>
+  <td className="border border-black px-1 py-1.5 border-t-0">
+  <div className="h-[160px] w-full">&nbsp;</div>
+</td>
+  <td className="border border-black px-1 py-1.5 border-t-0">
+  <div className="h-[160px] w-full">&nbsp;</div>
+</td>
+  <td className="border border-black px-1 py-1.5 border-t-0">
+  <div className="h-[160px] w-full">&nbsp;</div>
+</td>
+  <td className="border border-black px-1 py-1.5 border-t-0">
+  <div className="h-[160px] w-full">&nbsp;</div>
+</td>
+  <td className="border border-black px-1 py-1.5 border-t-0">
+  <div className="h-[160px] w-full">&nbsp;</div>
+</td>
+</tr>
                       </>
                     );
                   }
@@ -493,6 +500,7 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
                       <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
                       <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
                       <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
+                     <td className="border border-black px-1 py-1.5 border-t-0">&nbsp;</td>
                     </tr>
                   );
                 })()}

@@ -38,7 +38,6 @@ model Invoice {
   receiverAddress   String
   receiverGSTIN     String
   invoiceNumber     String
-  billNo            String
   dispatchedThrough String
   customTransport   String
   billOfLading      String

@@ -135,12 +135,24 @@ export default async function CustomerHistoryPage({ params }: { params: { custom
 
     return {
       ...invoice,
-      invoiceNumber: invoice.invoiceNumber || '—',
+      invoiceNumber: invoice.invoiceNumber || invoice.billNo || invoice.billNumber || '—',
       billNumber: invoice.billNo || invoice.billNumber,
       invoiceDate: formatDate(invoice.date),
-      products: getInvoiceProductSummary(invoice.items),
-      quantity: getInvoiceQuantity(invoice.items),
-      invoiceAmount: formatCurrency(invoiceAmount),
+    products: getInvoiceProductSummary(invoice.items),
+
+bags: (() => {
+  const items = invoice.items ? JSON.parse(invoice.items) : [];
+  return items[0]?.bags ?? 0;
+})(),
+
+quantity: getInvoiceQuantity(invoice.items),
+
+rate: (() => {
+  const items = invoice.items ? JSON.parse(invoice.items) : [];
+  return items[0]?.rate ?? 0;
+})(),
+
+invoiceAmount: formatCurrency(invoiceAmount),
       paymentMade: formatPaymentDisplay(paymentMadeValue, paymentMadeValue),
       pendingAmount: formatPaymentDisplay(pendingAmountValue, paymentMadeValue),
     };
@@ -237,15 +249,21 @@ export default async function CustomerHistoryPage({ params }: { params: { custom
         customer={customerSummary}
         invoices={historyRowsWithRunningTotal.map((invoice) => ({
           id: invoice.id as string,
-          invoiceNumber: invoice.invoiceNumber,
+          invoiceNumber:
+  invoice.invoiceNumber ||
+  invoice.billNo ||
+  invoice.billNumber ||
+  '—',
           billNumber: invoice.billNumber,
           invoiceDate: invoice.invoiceDate,
-          products: invoice.products,
-          quantity: invoice.quantity,
-          invoiceAmount: invoice.invoiceAmount,
-          paymentMade: invoice.paymentMade,
-          pendingAmount: invoice.pendingAmount,
-          runningTotal: invoice.runningTotal,
+        products: invoice.products,
+bags: invoice.bags,
+quantity: invoice.quantity,
+rate: invoice.rate,
+invoiceAmount: invoice.invoiceAmount,
+paymentMade: invoice.paymentMade,
+pendingAmount: invoice.pendingAmount,
+
           date: invoice.date,
           grandTotal: invoice.grandTotal,
         }))}
@@ -279,7 +297,19 @@ export default async function CustomerHistoryPage({ params }: { params: { custom
             <table className="w-full table-auto text-left">
               <thead className="bg-[#F8F4FF] text-sm text-[#6D7280]">
                 <tr>
-                  {['Invoice Number', 'Bill Number', 'Invoice Date', 'Product(s)', 'Quantity', 'Invoice Amount', 'Payment Made', 'Pending Amount', 'Actions'].map((column) => (
+                  {[
+  'Invoice Number',
+  'Invoice Date',
+  'Product(s)',
+  'HSN ACS',
+  'No. of Bags',
+  'Weight',
+  'Rate',
+  'Invoice Amount',
+  'Payment Made',
+  'Pending Amount',
+  'Actions',
+].map((column) => (
                     <th key={column} className="px-4 py-4 font-semibold">
                       {column}
                     </th>
@@ -290,14 +320,28 @@ export default async function CustomerHistoryPage({ params }: { params: { custom
                 {historyRowsWithRunningTotal.map((invoice) => (
                   <tr key={invoice.id} className="border-t border-[#F1EAFB] text-sm text-[#4B5563] transition hover:bg-[#FCFAFF]">
                     <td className="px-4 py-4 font-semibold text-[#2F3340]">{invoice.invoiceNumber}</td>
-                    <td className="px-4 py-4">{invoice.billNumber || '—'}</td>
                     <td className="px-4 py-4">{invoice.invoiceDate}</td>
                     <td className="px-4 py-4">{invoice.products}</td>
-                    <td className="px-4 py-4">{invoice.quantity}</td>
-                    <td className="px-4 py-4 font-semibold text-[#2F3340]">{invoice.invoiceAmount}</td>
-                    <td className="px-4 py-4 font-semibold text-[#2F3340]">{invoice.paymentMade}</td>
-                    <td className="px-4 py-4 font-semibold text-[#2F3340]">{invoice.pendingAmount}</td>
-                    <td className="px-4 py-4 font-semibold text-[#2F3340]">{invoice.runningTotal}</td>
+
+<td className="px-4 py-4">1006400</td>
+
+<td className="px-4 py-4">{invoice.bags}</td>
+
+<td className="px-4 py-4">{invoice.quantity}</td>
+
+<td className="px-4 py-4">{invoice.rate}</td>
+
+<td className="px-4 py-4 font-semibold text-[#2F3340]">
+  {invoice.invoiceAmount}
+</td>
+
+<td className="px-4 py-4 font-semibold text-[#2F3340]">
+  {invoice.paymentMade}
+</td>
+
+<td className="px-4 py-4 font-semibold text-[#2F3340]">
+  {invoice.pendingAmount}
+</td>
                     <td className="px-4 py-4">
                       <div className="flex flex-wrap gap-2">
                         <Link

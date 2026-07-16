@@ -26,12 +26,16 @@ const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   )}
 
   {/* Desktop Sidebar */}
-  <div className="hidden lg:block">
-    <Sidebar
-      collapsed={collapsed}
-      onToggle={() => setCollapsed((value) => !value)}
-    />
-  </div>
+ <div
+  className={`fixed left-0 top-0 z-30 hidden lg:block ${
+    collapsed ? "w-24" : "w-64"
+  }`}
+>
+  <Sidebar
+    collapsed={collapsed}
+    onToggle={() => setCollapsed((value) => !value)}
+  />
+</div>
 
   {/* Mobile Sidebar */}
   <div

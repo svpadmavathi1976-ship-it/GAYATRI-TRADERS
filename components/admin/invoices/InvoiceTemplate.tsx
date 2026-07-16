@@ -13,7 +13,7 @@ interface InvoiceTemplateProps {
   className?: string;
   isEditable?: boolean;
   onFieldChange?: (field: keyof InvoiceFormData, value: string | number) => void;
-  onRowChange?: (rowId: string, field: 'description' | 'customDescription' | 'quantity' | 'rate', value: string | number) => void;
+  onRowChange?: (rowId: string, field: 'description' | 'quantity' | 'rate' | 'bags' | 'customDescription', value: string | number) => void;
   onAddRow?: () => void;
   onDeleteRow?: (rowId: string) => void;
   fieldErrors?: Record<string, string>;

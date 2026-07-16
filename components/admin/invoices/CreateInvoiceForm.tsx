@@ -20,6 +20,7 @@ const createDefaultRows = (): InvoiceRow[] => [
   {
     id: '1',
     description: 'Raw Broken Rice / Damage Rice',
+        bags: 0,
     quantity: 0,
     rate: 0,
     amount: 0,

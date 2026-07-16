@@ -17,10 +17,19 @@ interface CustomerInvoiceExportRow {
   invoiceNumber: string;
   billNumber?: string | null;
   invoiceDate: string;
+
   products: string;
+  bags: string;
   quantity: string;
+  rate: string;
+
   invoiceAmount: string;
+
+  paymentMade: string;
+  pendingAmount: string;
+
   runningTotal: string;
+
   date?: string | null;
   grandTotal?: number | string | null;
 }

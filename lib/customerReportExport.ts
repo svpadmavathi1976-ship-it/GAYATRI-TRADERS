@@ -16,7 +16,9 @@ export interface CustomerInvoiceExportRow {
   billNumber?: string | null;
   invoiceDate: string;
   products: string;
+  bags: string;
   quantity: string;
+rate: string;
   invoiceAmount: string;
   paymentMade?: string | null;
   pendingAmount?: string | null;
@@ -511,8 +513,8 @@ const textAlignments = [
     customerReport.invoices.forEach((invoice, invoiceIndex) => {
       console.log("Global PDF Invoice:", invoice);
      const rowValues = [
-  normalizeText(invoice.invoiceNumber || invoice.billNo || invoice.billNumber),
-  formatDateForExport(invoice.date || invoice.invoiceDate),
+  normalizeText(invoice.invoiceNumber),
+   formatDateForExport(invoice.date || invoice.invoiceDate),
 
   normalizeText(invoice.products),
 
@@ -818,7 +820,7 @@ export async function exportCustomerReportToPDF({ customer, invoices }: Customer
 
   invoices.forEach((invoice) => {
     const rowValues = [
-  normalizeText(invoice.invoiceNumber || invoice.billNo || invoice.billNumber),
+  normalizeText(invoice.invoiceNumber),
 
   formatDateForExport(invoice.date || invoice.invoiceDate),
 
@@ -928,7 +930,7 @@ export function exportCustomerReportToExcel({ customer, invoices }: CustomerRepo
 
   invoices.forEach((invoice) => {
     rows.push([
-  normalizeText(invoice.invoiceNumber || invoice.billNo || invoice.billNumber),
+  normalizeText(invoice.invoiceNumber),
 
   formatDateForExport(invoice.date || invoice.invoiceDate),
 

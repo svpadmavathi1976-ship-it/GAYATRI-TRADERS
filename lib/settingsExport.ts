@@ -210,15 +210,26 @@ export function buildCustomerReportExportPayload(invoices: InvoiceBackupRecord[]
       const itemDescriptions = parseInvoiceItems(invoice.items).map((item) => item.description?.trim()).filter(Boolean);
       const products = itemDescriptions.length ? itemDescriptions.join(', ') : '—';
       const quantityTotal = parseInvoiceItems(invoice.items).reduce((sum, item) => sum + Number(item?.quantity ?? 0), 0);
+const bagsTotal = parseInvoiceItems(invoice.items).reduce(
+  (sum, item) => sum + Number(item?.bags ?? 0),
+  0
+);
 
+const rateValue = parseInvoiceItems(invoice.items)[0]?.rate ?? 0;
       return {
         id: invoice.id,
         invoiceNumber: invoice.invoiceNumber || invoice.billNumber || '—',
         billNumber: invoice.billNo || invoice.billNumber || '—',
         invoiceDate: normalizeDate(invoice.date),
-        products,
-        quantity: quantityTotal > 0 ? String(quantityTotal) : '—',
-        invoiceAmount: formatCurrency(invoice.grandTotal),
+      products,
+
+bags: bagsTotal > 0 ? String(bagsTotal) : '—',
+
+quantity: quantityTotal > 0 ? String(quantityTotal) : '—',
+
+rate: rateValue > 0 ? String(rateValue) : '—',
+
+invoiceAmount: formatCurrency(invoice.grandTotal),
         paymentMade: invoice.paymentMade !== null ? formatCurrency(invoice.paymentMade) : '—',
         pendingAmount: invoice.pendingAmount !== null ? formatCurrency(invoice.pendingAmount) : '—',
         runningTotal: formatCurrency(invoice.grandTotal),

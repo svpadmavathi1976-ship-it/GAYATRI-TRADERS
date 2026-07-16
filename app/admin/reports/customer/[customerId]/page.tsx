@@ -263,7 +263,7 @@ rate: invoice.rate,
 invoiceAmount: invoice.invoiceAmount,
 paymentMade: invoice.paymentMade,
 pendingAmount: invoice.pendingAmount,
-
+runningTotal: invoice.runningTotal,
           date: invoice.date,
           grandTotal: invoice.grandTotal,
         }))}

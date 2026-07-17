@@ -323,7 +323,7 @@ runningTotal: invoice.runningTotal,
                     <td className="px-4 py-4">{invoice.invoiceDate}</td>
                     <td className="px-4 py-4">{invoice.products}</td>
 
-<td className="px-4 py-4">1006400</td>
+<td className="px-4 py-4">10064000</td>
 
 <td className="px-4 py-4">{invoice.bags}</td>
 

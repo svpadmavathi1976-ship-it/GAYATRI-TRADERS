@@ -406,7 +406,7 @@ const InvoiceTemplate = forwardRef<HTMLDivElement, InvoiceTemplateProps>(({
                           </td>
                           <td className="border border-black border-b-0 px-1 py-1.5 text-center">
   <div className="text-[10px] font-semibold text-gray-800">
-    1006400
+    10064000
   </div>
 </td>
 <td className="border border-black border-b-0 px-1 py-1.5 text-center">

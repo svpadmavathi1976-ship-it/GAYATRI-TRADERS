@@ -163,7 +163,7 @@ export function exportInvoiceToExcel(invoice: ExcelInvoiceData) {
  itemRows.forEach((row: any) => {
   rows.push([
     row.description || '-',
-    1006400,
+    10064000,
     row.bags || 0,
     row.quantity || 0,
     row.rate || 0,

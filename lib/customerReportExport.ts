@@ -518,7 +518,7 @@ const textAlignments = [
 
   normalizeText(invoice.products),
 
-  '1006400',
+  '10064000',
 
   normalizeText(invoice.bags),
 
@@ -624,7 +624,7 @@ rows.push([
 
   normalizeText(invoice.products),
 
-  '1006400',
+  '10064000',
 
   normalizeText(invoice.bags),
 
@@ -826,7 +826,7 @@ export async function exportCustomerReportToPDF({ customer, invoices }: Customer
 
   normalizeText(invoice.products),
 
-  '1006400',
+  '10064000',
 
   normalizeText(invoice.bags),
 
@@ -936,7 +936,7 @@ export function exportCustomerReportToExcel({ customer, invoices }: CustomerRepo
 
   normalizeText(invoice.products),
 
-  '1006400',
+  '10064000',
 
   normalizeText(invoice.bags),
 
